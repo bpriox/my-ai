@@ -6,6 +6,15 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
+    <meta
+      name="description"
+      content="AI Company Room — چت‌روم چندعاملی هوش مصنوعی"
+    />
+    <meta name="theme-color" content="#18181b" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d97757' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z'/%3E%3C/svg%3E"
+    />
     <title>AI Company Room</title>
     <style>
       :root {
@@ -18,6 +27,7 @@
         --pri: #18181b;
         --prf: #fafafa;
         --ring: #3b82f6;
+        --err: #dc2626;
         --ease: cubic-bezier(0.22, 1, 0.36, 1);
       }
       @media (prefers-color-scheme: dark) {
@@ -137,10 +147,20 @@
       .chip:hover {
         background: var(--muted);
       }
+      .chip.add {
+        border-style: dashed;
+        color: var(--mfg);
+        background: transparent;
+      }
+      .chip.add:hover {
+        background: var(--muted);
+        color: var(--fg);
+      }
       .dot {
         width: 8px;
         height: 8px;
         border-radius: 50%;
+        flex: none;
       }
       .bar {
         display: flex;
@@ -196,6 +216,8 @@
         font-size: 12px;
         color: var(--mfg);
         text-align: center;
+        max-width: 90%;
+        line-height: 1.7;
       }
       .who {
         display: flex;
@@ -204,6 +226,11 @@
         font-size: 12px;
         font-weight: 600;
         margin-bottom: 8px;
+        flex-wrap: wrap;
+      }
+      .who .nm {
+        color: var(--mfg);
+        font-weight: 400;
       }
       .body {
         font-size: 14px;
@@ -212,7 +239,7 @@
         word-break: break-word;
       }
       .err .body {
-        color: #dc2626;
+        color: var(--err);
       }
       .think {
         display: flex;
@@ -408,8 +435,10 @@
         border-radius: 20px;
         background: var(--card);
         color: var(--fg);
-        width: min(520px, 94vw);
+        width: min(560px, 94vw);
         padding: 20px;
+        max-height: 90vh;
+        overflow-y: auto;
       }
       dialog::backdrop {
         background: rgba(0, 0, 0, 0.5);
@@ -428,18 +457,18 @@
         background: var(--bg);
         direction: ltr;
       }
-      .row {
-        display: grid;
-        grid-template-columns: 90px 1fr;
-        gap: 8px;
-        align-items: center;
-        margin-top: 6px;
+      dialog h3 {
+        margin: 0 0 4px;
+        font-weight: 600;
       }
       .hint {
         font-size: 12px;
         color: var(--mfg);
         margin-top: 10px;
         line-height: 1.7;
+      }
+      #dHint.err {
+        color: var(--err);
       }
       .btn {
         border: 1px solid var(--bd);
@@ -451,6 +480,113 @@
         background: var(--pri);
         color: var(--prf);
         border-color: var(--pri);
+      }
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 18px 0 8px;
+        font-size: 13px;
+        color: var(--mfg);
+      }
+      .section-head button {
+        font-size: 12px;
+        padding: 5px 12px;
+        border: 1px dashed var(--bd);
+        background: transparent;
+        border-radius: 8px;
+        color: var(--fg);
+      }
+      .section-head button:hover {
+        background: var(--muted);
+      }
+      #agentList {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .agent-card {
+        background: var(--muted);
+        border-radius: 12px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .agent-card .row1 {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .agent-card .row1 input {
+        flex: 1;
+        padding: 7px 9px;
+        border: 1px solid var(--bd);
+        border-radius: 8px;
+        background: var(--bg);
+        font-size: 13px;
+        min-width: 0;
+      }
+      .agent-card input.c {
+        flex: 0 0 34px !important;
+        width: 34px !important;
+        height: 34px;
+        padding: 2px !important;
+        border-radius: 8px !important;
+        cursor: pointer;
+      }
+      .agent-card input.n {
+        flex: 1.1 !important;
+        direction: auto;
+      }
+      .agent-card input.i {
+        flex: 1 !important;
+        direction: auto;
+        font-family: ui-monospace, monospace;
+        font-size: 12px !important;
+      }
+      .agent-card .del {
+        flex: 0 0 auto;
+        border: 0;
+        background: transparent;
+        color: var(--mfg);
+        padding: 6px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .agent-card .del:hover {
+        background: color-mix(in srgb, var(--err) 15%, transparent);
+        color: var(--err);
+      }
+      .agent-card .del svg {
+        width: 15px;
+        height: 15px;
+      }
+      .agent-card input.m {
+        width: 100%;
+        padding: 7px 9px;
+        border: 1px solid var(--bd);
+        border-radius: 8px;
+        background: var(--bg);
+        font-size: 12px;
+        direction: ltr;
+        font-family: ui-monospace, monospace;
+      }
+      .empty-note {
+        text-align: center;
+        padding: 20px 10px;
+        font-size: 13px;
+        color: var(--mfg);
+        border: 1px dashed var(--bd);
+        border-radius: 12px;
+      }
+      .dialog-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 16px;
       }
       @media (prefers-reduced-motion: reduce) {
         .in,
@@ -510,7 +646,7 @@
     </form>
 
     <dialog id="dlg">
-      <h3 id="dTitle" style="margin: 0"></h3>
+      <h3 id="dTitle"></h3>
       <label id="lKey"></label>
       <input
         id="key"
@@ -520,70 +656,50 @@
       />
       <label id="lBase"></label>
       <input id="base" placeholder="https://openrouter.ai/api/v1" />
-      <label id="lModels"></label>
-      <div id="models"></div>
+
+      <div class="section-head">
+        <span id="lAgents"></span>
+        <button type="button" id="addAgentBtn"></button>
+      </div>
+      <div id="agentList"></div>
+
       <p class="hint" id="dHint"></p>
-      <div
-        style="
-          display: flex;
-          gap: 8px;
-          justify-content: flex-end;
-          margin-top: 14px;
-        "
-      >
-        <button class="btn" id="reset" type="button"></button>
+      <div class="dialog-actions">
+        <button class="btn" id="cancel" type="button"></button>
         <button class="btn p" id="save" type="button"></button>
       </div>
     </dialog>
 
     <script>
-      const AGENTS = [
-        {
-          id: "claude",
-          color: "#d97757",
-          al: ["claude", "کلاد", "کلود"],
-          model: "meta-llama/llama-3.3-70b-instruct:free",
-        },
-        {
-          id: "gpt",
-          color: "#10a37f",
-          al: ["gpt", "chatgpt", "جیپیتی", "چت_جی_پی_تی"],
-          model: "openai/gpt-oss-20b:free",
-        },
-        {
-          id: "deepseek",
-          color: "#4d6bfe",
-          al: ["deepseek", "دیپسیک", "دیپ_سیک"],
-          model: "deepseek/deepseek-chat-v3-0324:free",
-        },
-        {
-          id: "gemini",
-          color: "#8e5cf6",
-          al: ["gemini", "جمینای"],
-          model: "google/gemma-3-27b-it:free",
-        },
-        {
-          id: "grok",
-          color: "#e0457b",
-          al: ["grok", "گراک"],
-          model: "mistralai/mistral-small-3.2-24b-instruct:free",
-        },
-      ];
+      /* ---------- translations ---------- */
       const T = {
         fa: {
           eye: "یک تیم کوچک، چند ذهن",
           title: "اتاق شرکت هوش مصنوعی",
           settings: "تنظیمات",
           clear: "پاک کردن",
-          ph: "پیام بنویس… مثلاً @claude یک اپ ساده طراحی کن",
+          ph: "پیام بنویس…",
           welcome:
             "همه پیام‌ها را می‌بینند، اما فقط کسی که منشن شود جواب می‌دهد.",
+          welcomeEmpty:
+            "هنوز هیچ عاملی نداری. از تنظیمات یکی بساز، بعد با @ایدی منشنش کن.",
           nokey: "اول کلید OpenRouter را در تنظیمات وارد کن.",
+          noAgentsWarn: "هیچ عاملی تعریف نشده. اول از تنظیمات یکی اضافه کن.",
+          unknownMention: "هیچ عاملی با این ایدی پیدا نشد.",
           dTitle: "تنظیمات",
           lKey: "کلید API (فقط در همین مرورگر می‌ماند)",
-          lModels: "مدل هر عضو (شناسه مدل در OpenRouter)",
+          lBase: "آدرس API (سازگار با OpenAI)",
+          lAgents: "عوامل هوش مصنوعی",
+          addAgent: "افزودن عامل",
+          manageAgents: "مدیریت عوامل",
+          noAgentsYet: "هنوز عاملی نداری. روی «افزودن عامل» بزن.",
+          name: "نام (اختیاری)",
+          idLabel: "ایدی (@منشن)",
+          modelId: "شناسه مدل (مثلاً meta-llama/llama-3.3-70b-instruct:free)",
+          color: "رنگ",
+          delete: "حذف",
           save: "ذخیره",
-          reset: "بازنشانی مدل‌ها",
+          cancel: "انصراف",
           think: "فکر کردن",
           thinking: "در حال فکر کردن…",
           thought: "{n} ثانیه فکر کرد",
@@ -591,9 +707,11 @@
           s2: "پرسیدن از {m}",
           s3: "{n} فایل ذخیره شد",
           stopped: "متوقف شد",
-          hint: "مدل‌های رایگان OpenRouter با «:free» تمام می‌شوند و گاهی تغییر می‌کنند. اگر خطای 404 یا 429 دیدی، شناسه مدل را از openrouter.ai/models عوض کن.",
+          hint: "مدل‌های رایگان OpenRouter با «:free» تمام می‌شوند. اگر خطای 404 یا 429 دیدی، شناسه مدل را از openrouter.ai/models عوض کن.",
           err: "خطا",
-          lBase: "آدرس API (سازگار با OpenAI)",
+          errIdEmpty: "عامل {n}: ایدی خالی است",
+          errModelEmpty: "عامل {n}: شناسه مدل خالی است",
+          errIdDup: "ایدی «{id}» تکراری است",
           files: "فایل‌ها",
           zip: "دانلود ZIP",
           folder: "انتخاب پوشه",
@@ -605,15 +723,28 @@
           title: "AI Company Room",
           settings: "Settings",
           clear: "Clear",
-          ph: "Type a message… e.g. @claude design a simple app",
+          ph: "Type a message…",
           welcome:
             "Everyone sees every message, but only the mentioned agent replies.",
+          welcomeEmpty:
+            "No agents yet. Create one in Settings, then @mention it.",
           nokey: "Enter your OpenRouter key in Settings first.",
+          noAgentsWarn: "No agents defined. Add one in Settings first.",
+          unknownMention: "No agent found with that ID.",
           dTitle: "Settings",
           lKey: "API key (stays in this browser only)",
-          lModels: "Model per member (OpenRouter model ID)",
+          lBase: "API base URL (OpenAI-compatible)",
+          lAgents: "AI Agents",
+          addAgent: "Add agent",
+          manageAgents: "Manage agents",
+          noAgentsYet: "No agents yet. Click “Add agent” to create one.",
+          name: "Name (optional)",
+          idLabel: "ID (@mention)",
+          modelId: "Model ID (e.g. meta-llama/llama-3.3-70b-instruct:free)",
+          color: "Color",
+          delete: "Delete",
           save: "Save",
-          reset: "Reset models",
+          cancel: "Cancel",
           think: "Think",
           thinking: "Thinking it through",
           thought: "Thought for {n}s",
@@ -623,7 +754,9 @@
           stopped: "Stopped",
           hint: "Free OpenRouter models end in “:free” and change over time. If you get a 404 or 429, pick a new model ID from openrouter.ai/models.",
           err: "Error",
-          lBase: "API base URL (OpenAI-compatible)",
+          errIdEmpty: "Agent {n}: ID is empty",
+          errModelEmpty: "Agent {n}: model ID is empty",
+          errIdDup: "Duplicate ID: {id}",
           files: "Files",
           zip: "Download ZIP",
           folder: "Choose folder",
@@ -631,6 +764,8 @@
           noFiles: "No files yet",
         },
       };
+
+      /* ---------- helpers ---------- */
       const $ = (s) => document.querySelector(s);
       const store = {
         get(k, d) {
@@ -647,24 +782,52 @@
           } catch (e) {}
         },
       };
-      let lang = store.get("lang", "fa"),
-        history = [],
+      const escapeHtml = (s) =>
+        String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      const sanitizeId = (s) =>
+        (s || "").replace(/[^\p{L}\p{N}_]/gu, "").slice(0, 32);
+      const tr = (k, v = {}) =>
+        (T[lang][k] || k).replace(/\{(\w+)\}/g, (_, x) => v[x]);
+
+      /* ---------- state ---------- */
+      let lang = store.get("lang", "fa");
+      let agents = [];
+      try {
+        agents = JSON.parse(store.get("agents", "[]")) || [];
+      } catch (e) {
+        agents = [];
+      }
+      let draftAgents = [];
+      let history = [],
         busy = false,
         ctrl = null,
         stopped = false,
         tick = 0;
-      let models = JSON.parse(store.get("models", "{}"));
       let think = store.get("think", "1") === "1";
-      const modelOf = (a) => models[a.id] || a.model;
-      const tr = (k, v = {}) =>
-        T[lang][k].replace(/\{(\w+)\}/g, (_, x) => v[x]);
+      const files = new Map();
+      let dir = null;
+
       const I = {
         spark:
           '<svg viewBox="0 0 24 24"><path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>',
         chev: '<svg class="chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>',
         check: '<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',
+        trash:
+          '<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M6 6l1 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-14"/></svg>',
+        plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
       };
 
+      /* ---------- render ---------- */
       function applyLang() {
         document.documentElement.lang = lang;
         document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
@@ -676,26 +839,41 @@
         $("#t").placeholder = tr("ph");
         $("#t").setAttribute("aria-label", tr("ph"));
         $("#tgl").textContent = tr("think");
-        $("#lBase").textContent = tr("lBase");
         $("#bZip").textContent = tr("zip");
         $("#bFolder").textContent = tr("folder");
         updateBar();
         $("#dTitle").textContent = tr("dTitle");
         $("#lKey").textContent = tr("lKey");
-        $("#lModels").textContent = tr("lModels");
+        $("#lBase").textContent = tr("lBase");
+        $("#lAgents").textContent = tr("lAgents");
+        $("#addAgentBtn").innerHTML = I.plus + " " + tr("addAgent");
         $("#save").textContent = tr("save");
-        $("#reset").textContent = tr("reset");
-        $("#dHint").textContent = tr("hint");
+        $("#cancel").textContent = tr("cancel");
+        if (!$("#dHint").classList.contains("err"))
+          $("#dHint").textContent = tr("hint");
         $("#send").setAttribute("aria-label", busy ? "Stop" : "Send");
+        renderRoster();
         renderLog();
       }
+
       function renderRoster() {
-        $("#roster").innerHTML = "";
-        AGENTS.forEach((a) => {
+        const r = $("#roster");
+        r.innerHTML = "";
+        if (!agents.length) {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "chip add";
+          b.innerHTML = I.plus + " " + tr("addAgent");
+          b.onclick = openSettings;
+          r.appendChild(b);
+          return;
+        }
+        agents.forEach((a) => {
           const b = document.createElement("button");
           b.type = "button";
           b.className = "chip";
-          b.innerHTML = `<span class="dot" style="background:${a.color}"></span>@${a.id}`;
+          b.title = a.name && a.name !== a.id ? a.name : "";
+          b.innerHTML = `<span class="dot" style="background:${escapeHtml(a.color)}"></span>@${escapeHtml(a.id)}`;
           b.onclick = () => {
             const t = $("#t");
             t.value +=
@@ -703,37 +881,65 @@
             t.focus();
             grow();
           };
-          $("#roster").appendChild(b);
+          r.appendChild(b);
         });
+        const add = document.createElement("button");
+        add.type = "button";
+        add.className = "chip add";
+        add.innerHTML = I.plus;
+        add.title = tr("manageAgents");
+        add.setAttribute("aria-label", tr("manageAgents"));
+        add.onclick = openSettings;
+        r.appendChild(add);
       }
+
       function renderLog() {
         const log = $("#log");
         log.innerHTML = "";
         const w = document.createElement("div");
         w.className = "msg sys";
-        w.textContent = tr("welcome");
+        w.textContent = agents.length ? tr("welcome") : tr("welcomeEmpty");
         log.appendChild(w);
         history.forEach((m) => log.appendChild(bubble(m)));
         log.scrollTop = log.scrollHeight;
       }
+
       function bubble(m) {
         const d = document.createElement("div");
-        d.className =
-          "msg" + (m.role === "user" ? " me" : "") + (m.err ? " err" : "");
-        if (!m.seen) {
-          m.seen = true;
-          d.classList.add("in");
-        }
+        const anim = !m.seen;
+        if (anim) m.seen = true;
+
         if (m.role === "user") {
+          d.className = "msg me" + (anim ? " in" : "");
           d.textContent = m.text;
           return d;
         }
-        const a = AGENTS.find((x) => x.id === m.agent);
+
+        if (m.sys) {
+          d.className = "msg sys" + (anim ? " in" : "");
+          d.textContent = m.text;
+          return d;
+        }
+
+        const a = agents.find((x) => x.id === m.agent);
+        if (!a) {
+          d.className = "msg sys" + (anim ? " in" : "");
+          d.textContent = (m.agent ? `[${m.agent}] ` : "") + m.text;
+          return d;
+        }
+
+        d.className = "msg" + (m.err ? " err" : "") + (anim ? " in" : "");
         const w = document.createElement("div");
         w.className = "who";
         w.style.color = a.color;
-        w.innerHTML = `<span class="dot" style="background:${a.color}"></span>@${a.id}`;
+        w.innerHTML =
+          `<span class="dot" style="background:${escapeHtml(a.color)}"></span>` +
+          `<span>@${escapeHtml(a.id)}</span>` +
+          (a.name && a.name !== a.id
+            ? `<span class="nm">— ${escapeHtml(a.name)}</span>`
+            : "");
         d.appendChild(w);
+
         if (m.wait) {
           if (think) {
             const p = document.createElement("div");
@@ -750,6 +956,7 @@
           }
           return d;
         }
+
         if (think && m.steps) {
           const b = document.createElement("button");
           b.type = "button";
@@ -767,32 +974,41 @@
             const o = document.createElement("ol");
             o.className = "steps";
             o.innerHTML = m.steps
-              .map((s) => `<li>${I.check}${s}</li>`)
+              .map((s) => `<li>${I.check}${escapeHtml(s)}</li>`)
               .join("");
             d.appendChild(o);
           }
         }
+
         const s = document.createElement("div");
         s.className = "body";
         s.textContent = m.text;
         d.appendChild(s);
         return d;
       }
+
+      /* ---------- mentions & messages ---------- */
       function mentions(text, exclude) {
         const found = [];
         for (const m of text.matchAll(/@([\p{L}\p{N}_]+)/gu)) {
           const n = m[1].toLowerCase();
-          const a = AGENTS.find((x) => x.al.includes(n));
+          const a = agents.find((x) => x.id.toLowerCase() === n);
           if (a && a.id !== exclude && !found.includes(a.id)) found.push(a.id);
         }
         return found;
       }
+
       function buildMessages(a) {
-        const roster = AGENTS.map((x) => "@" + x.id).join(", ");
-        const sys = `You are @${a.id}, a member of a small AI company chat room with a human founder and these colleagues: ${roster}. You see the whole conversation, but you only speak when someone @mentions you. Reply in the language the founder is writing in. Be concise and practical. If you need a colleague to do something, mention them with @name at the end of your reply; otherwise do not mention anyone. When you create code or project files, put each file in its own fenced code block whose first line is a comment with the path, like \`// file: src/app.js\`, \`# file: main.py\` or \`<!-- file: index.html -->\`. Always write the complete file content, never partial snippets.`;
+        const roster = agents
+          .map(
+            (x) =>
+              "@" + x.id + (x.name && x.name !== x.id ? ` (${x.name})` : ""),
+          )
+          .join(", ");
+        const sys = `You are @${a.id}${a.name && a.name !== a.id ? ` (${a.name})` : ""}, a member of a small AI company chat room with a human founder and these colleagues: ${roster}. You see the whole conversation, but you only speak when someone @mentions you. Reply in the language the founder is writing in. Be concise and practical. If you need a colleague to do something, mention them with @name at the end of your reply; otherwise do not mention anyone. When you create code or project files, put each file in its own fenced code block whose first line is a comment with the path, like \`// file: src/app.js\`, \`# file: main.py\` or \`<!-- file: index.html -->\`. Always write the complete file content, never partial snippets.`;
         const out = [{ role: "system", content: sys }];
         history
-          .filter((m) => !m.wait && !m.err)
+          .filter((m) => !m.wait && !m.err && !m.sys)
           .forEach((m) => {
             const role = m.agent === a.id ? "assistant" : "user";
             const content =
@@ -808,6 +1024,7 @@
           });
         return out;
       }
+
       async function ask(a) {
         const key = store.get("key", "");
         const base = (
@@ -824,7 +1041,7 @@
               : {},
           ),
           body: JSON.stringify({
-            model: modelOf(a),
+            model: a.model,
             messages: buildMessages(a),
           }),
         });
@@ -839,6 +1056,8 @@
         if (!c) throw new Error("Empty response");
         return c.trim();
       }
+
+      /* ---------- run loop ---------- */
       function setBusy(v) {
         busy = v;
         $("#send").classList.toggle("busy", v);
@@ -857,12 +1076,15 @@
             1000,
           );
       }
+
       async function run(queue) {
         let steps = 0;
         ctrl = new AbortController();
         stopped = false;
         while (queue.length && steps < 6 && !stopped) {
-          const a = AGENTS.find((x) => x.id === queue.shift());
+          const id = queue.shift();
+          const a = agents.find((x) => x.id === id);
+          if (!a) continue;
           steps++;
           const t0 = Date.now(),
             ph = { role: "assistant", agent: a.id, wait: true, t0, seen: true };
@@ -873,7 +1095,7 @@
             const text = await ask(a);
             const before = files.size;
             await extractFiles(text);
-            const st = [tr("s1", { n: nMsgs }), tr("s2", { m: modelOf(a) })];
+            const st = [tr("s1", { n: nMsgs }), tr("s2", { m: a.model })];
             if (files.size > before || /file:/i.test(text))
               st.push(
                 tr("s3", {
@@ -887,8 +1109,8 @@
               steps: st,
               secs: Math.round((Date.now() - t0) / 1000),
             });
-            mentions(text, a.id).forEach((id) => {
-              if (!queue.includes(id)) queue.push(id);
+            mentions(text, a.id).forEach((mid) => {
+              if (!queue.includes(mid)) queue.push(mid);
             });
           } catch (e) {
             if (e.name === "AbortError") history.splice(history.indexOf(ph), 1);
@@ -903,9 +1125,8 @@
           renderLog();
         }
       }
-      /* ---------- files: extract, zip, folder ---------- */
-      const files = new Map();
-      let dir = null;
+
+      /* ---------- files ---------- */
       function updateBar() {
         const n = files.size;
         $("#fInfo").textContent =
@@ -916,12 +1137,14 @@
         $("#bZip").disabled = !n;
         $("#bFolder").style.display = window.showDirectoryPicker ? "" : "none";
       }
+
       const cleanPath = (p) =>
         p
           .replace(/\\/g, "/")
           .split("/")
           .filter((x) => x && x !== "." && x !== "..")
           .join("/");
+
       async function extractFiles(text) {
         for (const m of text.matchAll(/```[^\n]*\n([\s\S]*?)```/g)) {
           const lines = m[1].split("\n");
@@ -937,6 +1160,7 @@
         }
         updateBar();
       }
+
       async function writeToDir(path, content) {
         const parts = path.split("/");
         let d = dir;
@@ -949,6 +1173,7 @@
         await w.write(content);
         await w.close();
       }
+
       const CRC = (() => {
         const t = [];
         for (let n = 0; n < 256; n++) {
@@ -964,6 +1189,7 @@
         for (const x of b) c = CRC[(c ^ x) & 255] ^ (c >>> 8);
         return (c ^ 0xffffffff) >>> 0;
       };
+
       function makeZip(map) {
         const enc = new TextEncoder(),
           parts = [],
@@ -1006,6 +1232,7 @@
           type: "application/zip",
         });
       }
+
       $("#bZip").onclick = () => {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(makeZip(files));
@@ -1020,6 +1247,113 @@
           updateBar();
         } catch (e) {}
       };
+
+      /* ---------- settings dialog ---------- */
+      function renderAgentEditor() {
+        const list = $("#agentList");
+        list.innerHTML = "";
+        if (!draftAgents.length) {
+          const p = document.createElement("div");
+          p.className = "empty-note";
+          p.textContent = tr("noAgentsYet");
+          list.appendChild(p);
+          return;
+        }
+        draftAgents.forEach((a, i) => {
+          const card = document.createElement("div");
+          card.className = "agent-card";
+          card.innerHTML = `
+            <div class="row1">
+              <input type="color" class="c" value="${escapeHtml(a.color || "#3b82f6")}" title="${tr("color")}" aria-label="${tr("color")}">
+              <input class="n" placeholder="${tr("name")}" value="${escapeHtml(a.name || "")}" aria-label="${tr("name")}">
+              <input class="i" placeholder="@${tr("idLabel")}" value="${escapeHtml(a.id || "")}" aria-label="${tr("idLabel")}">
+              <button type="button" class="del" title="${tr("delete")}" aria-label="${tr("delete")}">${I.trash}</button>
+            </div>
+            <input class="m" placeholder="${tr("modelId")}" value="${escapeHtml(a.model || "")}" aria-label="${tr("modelId")}">
+          `;
+          card.querySelector(".c").oninput = (e) => (a.color = e.target.value);
+          card.querySelector(".n").oninput = (e) => (a.name = e.target.value);
+          card.querySelector(".i").oninput = (e) => (a.id = e.target.value);
+          card.querySelector(".m").oninput = (e) => (a.model = e.target.value);
+          card.querySelector(".del").onclick = () => {
+            draftAgents.splice(i, 1);
+            renderAgentEditor();
+          };
+          list.appendChild(card);
+        });
+      }
+
+      function openSettings() {
+        $("#key").value = store.get("key", "");
+        $("#base").value = store.get("base", "");
+        draftAgents = agents.map((a) => ({ ...a }));
+        $("#dHint").textContent = tr("hint");
+        $("#dHint").classList.remove("err");
+        renderAgentEditor();
+        $("#dlg").showModal();
+      }
+
+      function commitAgents() {
+        const cards = [...document.querySelectorAll("#agentList .agent-card")];
+        const cleaned = [];
+        const seen = new Set();
+        const errors = [];
+        cards.forEach((card, i) => {
+          const color = card.querySelector(".c").value;
+          const name = card.querySelector(".n").value.trim();
+          const id = sanitizeId(card.querySelector(".i").value);
+          const model = card.querySelector(".m").value.trim();
+          if (!id) {
+            errors.push(tr("errIdEmpty", { n: i + 1 }));
+            return;
+          }
+          if (!model) {
+            errors.push(tr("errModelEmpty", { n: i + 1 }));
+            return;
+          }
+          if (seen.has(id)) {
+            errors.push(tr("errIdDup", { id }));
+            return;
+          }
+          seen.add(id);
+          cleaned.push({ id, name: name || id, color, model });
+        });
+        if (errors.length) {
+          $("#dHint").textContent = errors.join(" • ");
+          $("#dHint").classList.add("err");
+          return false;
+        }
+        agents = cleaned;
+        store.set("agents", JSON.stringify(agents));
+        return true;
+      }
+
+      $("#addAgentBtn").onclick = () => {
+        draftAgents.push({
+          id: "",
+          name: "",
+          color: "#3b82f6",
+          model: "meta-llama/llama-3.3-70b-instruct:free",
+        });
+        renderAgentEditor();
+        const cards = document.querySelectorAll("#agentList .agent-card");
+        const last = cards[cards.length - 1];
+        if (last) last.querySelector(".n").focus();
+      };
+
+      $("#save").onclick = () => {
+        if (!commitAgents()) return;
+        store.set("key", $("#key").value.trim());
+        store.set("base", $("#base").value.trim());
+        $("#dlg").close();
+        renderRoster();
+        renderLog();
+      };
+
+      $("#cancel").onclick = () => $("#dlg").close();
+
+      $("#setBtn").onclick = openSettings;
+
       /* ---------- composer ---------- */
       const ta = $("#t");
       function grow() {
@@ -1027,12 +1361,14 @@
         ta.style.height = Math.max(56, Math.min(ta.scrollHeight, 120)) + "px";
       }
       ta.addEventListener("input", grow);
+
       $("#tg").onclick = () => {
         think = !think;
         store.set("think", think ? "1" : "0");
         $("#tg").setAttribute("aria-pressed", think);
         renderLog();
       };
+
       $("#send").addEventListener("click", (e) => {
         if (busy) {
           e.preventDefault();
@@ -1040,76 +1376,69 @@
           ctrl && ctrl.abort();
         }
       });
+
       $("#f").addEventListener("submit", async (e) => {
         e.preventDefault();
         const v = ta.value.trim();
         if (!v || busy) return;
-        if (!store.get("key", "") && !store.get("base", "")) {
-          history.push({
-            role: "assistant",
-            agent: "claude",
-            text: tr("nokey"),
-            err: true,
-          });
+
+        if (!agents.length) {
+          history.push({ sys: true, text: tr("noAgentsWarn") });
           renderLog();
-          $("#dlg").showModal();
+          openSettings();
           return;
         }
+
+        if (!store.get("key", "") && !store.get("base", "")) {
+          history.push({ sys: true, text: tr("nokey") });
+          renderLog();
+          openSettings();
+          return;
+        }
+
         ta.value = "";
         grow();
         history.push({ role: "user", text: v });
-        renderLog();
+
         const q = mentions(v);
+        if (!q.length) {
+          if (/@[\p{L}\p{N}_]+/u.test(v)) {
+            history.push({ sys: true, text: tr("unknownMention") });
+          }
+          renderLog();
+          return;
+        }
+
+        renderLog();
         setBusy(true);
         await run(q);
         setBusy(false);
         ta.focus();
       });
+
       ta.addEventListener("keydown", (e) => {
         if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
           e.preventDefault();
           $("#f").requestSubmit();
         }
       });
+
       $("#lang").onclick = () => {
         lang = lang === "fa" ? "en" : "fa";
         store.set("lang", lang);
         applyLang();
       };
+
       $("#clr").onclick = () => {
         history = [];
         files.clear();
         updateBar();
         renderLog();
       };
-      $("#setBtn").onclick = () => {
-        $("#key").value = store.get("key", "");
-        $("#base").value = store.get("base", "");
-        $("#models").innerHTML = "";
-        AGENTS.forEach((a) => {
-          const r = document.createElement("div");
-          r.className = "row";
-          r.innerHTML = `<span style="color:${a.color};font-weight:700">@${a.id}</span><input data-id="${a.id}" value="${modelOf(a)}">`;
-          $("#models").appendChild(r);
-        });
-        $("#dlg").showModal();
-      };
-      $("#save").onclick = () => {
-        store.set("key", $("#key").value.trim());
-        store.set("base", $("#base").value.trim());
-        document.querySelectorAll("#models input").forEach((i) => {
-          models[i.dataset.id] = i.value.trim();
-        });
-        store.set("models", JSON.stringify(models));
-        $("#dlg").close();
-      };
-      $("#reset").onclick = () => {
-        models = {};
-        store.set("models", "{}");
-        $("#setBtn").click();
-      };
+
       $("#tg").setAttribute("aria-pressed", think);
-      renderRoster();
+
+      /* ---------- boot ---------- */
       applyLang();
     </script>
   </body>
