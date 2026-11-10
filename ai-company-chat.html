@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>AI Company Room</title>
+    <style>
+      :root {
+        --bg: #fafafa;
+        --fg: #18181b;
+        --card: #fff;
+        --muted: #f4f4f5;
+        --mfg: #71717a;
+        --bd: #e4e4e7;
+        --pri: #18181b;
+        --prf: #fafafa;
+        --ring: #3b82f6;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #09090b;
+          --fg: #fafafa;
+          --card: #18181b;
+          --muted: #27272a;
+          --mfg: #a1a1aa;
+          --bd: #27272a;
+          --pri: #fafafa;
+          --prf: #18181b;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        font-family: Vazirmatn, Tahoma, system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        display: flex;
+        flex-direction: column;
+        max-width: 720px;
+        margin: auto;
+        padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+        height: 100dvh;
+      }
+      button,
+      select,
+      input,
+      textarea {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      :focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+      }
+      svg {
+        width: 14px;
+        height: 14px;
+        flex: none;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding-bottom: 10px;
+      }
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--mfg);
+        margin-bottom: 4px;
+      }
+      header h1 {
+        font-size: 22px;
+        font-weight: 500;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+      header .t {
+        flex: 1;
+      }
+      .ghost {
+        border: 0;
+        background: transparent;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 13px;
+        color: var(--mfg);
+      }
+      .ghost:hover {
+        background: var(--muted);
+        color: var(--fg);
+      }
+      .ghost:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+      #roster {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        padding: 2px 0 10px;
+      }
+      .chip {
+        white-space: nowrap;
+        border: 1px solid var(--bd);
+        border-radius: 99px;
+        padding: 5px 12px;
+        font-size: 13px;
+        background: var(--card);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        transition: background 0.2s;
+      }
+      .chip:hover {
+        background: var(--muted);
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .bar {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        background: var(--muted);
+        border-radius: 12px;
+        padding: 4px 4px 4px 12px;
+        padding-inline: 12px 4px;
+        font-size: 12px;
+        color: var(--mfg);
+        margin-bottom: 6px;
+      }
+      .bar .grow {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #log {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 6px 2px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow-anchor: none;
+      }
+      .in {
+        animation: in 0.5s var(--ease) backwards;
+      }
+      @keyframes in {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+      }
+      .msg.me {
+        align-self: flex-start;
+        max-width: 90%;
+        background: var(--muted);
+        border-radius: 18px;
+        border-start-start-radius: 4px;
+        padding: 10px 14px;
+        font-size: 14px;
+        line-height: 1.8;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .msg.sys {
+        align-self: center;
+        font-size: 12px;
+        color: var(--mfg);
+        text-align: center;
+      }
+      .who {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .body {
+        font-size: 14px;
+        line-height: 1.9;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .err .body {
+        color: #dc2626;
+      }
+      .think {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--bd);
+        background: color-mix(in srgb, var(--muted) 60%, transparent);
+        border-radius: 99px;
+        padding: 5px 11px;
+        font-size: 12px;
+        color: var(--mfg);
+        margin-bottom: 10px;
+        transition: background 0.2s;
+      }
+      button.think:hover {
+        background: var(--muted);
+        color: var(--fg);
+      }
+      .think.live {
+        border: 0;
+        background: none;
+        padding: 5px 0;
+        width: 100%;
+      }
+      .think .tm {
+        margin-inline-start: auto;
+        font:
+          11px ui-monospace,
+          monospace;
+        font-variant-numeric: tabular-nums;
+      }
+      .shim {
+        background: linear-gradient(
+            90deg,
+            var(--mfg) 0,
+            var(--mfg) 42%,
+            var(--fg) 50%,
+            var(--mfg) 58%,
+            var(--mfg) 100%
+          )
+          100% 0/250% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: sh 1.8s linear infinite;
+      }
+      @keyframes sh {
+        to {
+          background-position: 0 0;
+        }
+      }
+      .chev {
+        transition: transform 0.2s;
+      }
+      .open .chev {
+        transform: rotate(90deg);
+      }
+      html[dir="rtl"] .chev {
+        transform: scaleX(-1);
+      }
+      html[dir="rtl"] .open .chev {
+        transform: scaleX(-1) rotate(90deg);
+      }
+      ol.steps {
+        list-style: none;
+        margin: 0 7px 14px;
+        padding: 0 20px 0 0;
+        padding-inline: 20px 0;
+        border-inline-start: 1px solid var(--bd);
+      }
+      ol.steps li {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: 30px;
+        font-size: 12px;
+        color: var(--mfg);
+      }
+      ol.steps li svg {
+        position: absolute;
+        inset-inline-start: -27px;
+        background: var(--bg);
+        box-shadow: 0 0 0 4px var(--bg);
+        width: 11px;
+        height: 11px;
+        stroke: var(--fg);
+        border-radius: 50%;
+      }
+      form {
+        background: var(--card);
+        border: 1px solid var(--bd);
+        border-radius: 24px;
+        padding: 14px;
+        box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.18);
+        margin-top: 10px;
+      }
+      textarea {
+        display: block;
+        width: 100%;
+        resize: none;
+        border: 0;
+        background: transparent;
+        font-size: 16px;
+        line-height: 1.7;
+        height: 56px;
+        min-height: 56px;
+        max-height: 120px;
+        padding: 4px;
+        border-radius: 8px;
+        outline: none;
+      }
+      textarea::placeholder {
+        color: var(--mfg);
+      }
+      textarea:focus-visible {
+        outline: 2px solid var(--ring);
+      }
+      .row0 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+      }
+      #tg {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        height: 32px;
+        border-radius: 99px;
+        border: 1px solid var(--bd);
+        background: var(--card);
+        color: var(--mfg);
+        padding: 0 12px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      #tg[aria-pressed="true"] {
+        background: color-mix(in srgb, var(--pri) 6%, transparent);
+        color: var(--fg);
+        border-color: color-mix(in srgb, var(--pri) 18%, transparent);
+      }
+      #tg .ck {
+        display: none;
+        width: 12px;
+        height: 12px;
+      }
+      #tg[aria-pressed="true"] .ck {
+        display: block;
+      }
+      #send {
+        position: relative;
+        width: 36px;
+        height: 36px;
+        border: 0;
+        border-radius: 12px;
+        background: var(--pri);
+        color: var(--prf);
+      }
+      #send:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+      #send span {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          opacity 0.2s,
+          scale 0.2s;
+      }
+      #send .st,
+      #send.busy .sd {
+        opacity: 0;
+        scale: 0.75;
+      }
+      #send.busy .st {
+        opacity: 1;
+        scale: 1;
+      }
+      #send svg {
+        width: 16px;
+        height: 16px;
+      }
+      #send .st svg {
+        width: 12px;
+        height: 12px;
+        fill: currentColor;
+      }
+      dialog {
+        border: 1px solid var(--bd);
+        border-radius: 20px;
+        background: var(--card);
+        color: var(--fg);
+        width: min(520px, 94vw);
+        padding: 20px;
+      }
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.5);
+      }
+      dialog label {
+        display: block;
+        font-size: 13px;
+        margin: 12px 0 4px;
+        color: var(--mfg);
+      }
+      dialog input {
+        width: 100%;
+        padding: 9px 10px;
+        border: 1px solid var(--bd);
+        border-radius: 10px;
+        background: var(--bg);
+        direction: ltr;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 90px 1fr;
+        gap: 8px;
+        align-items: center;
+        margin-top: 6px;
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--mfg);
+        margin-top: 10px;
+        line-height: 1.7;
+      }
+      .btn {
+        border: 1px solid var(--bd);
+        background: transparent;
+        border-radius: 10px;
+        padding: 7px 14px;
+      }
+      .btn.p {
+        background: var(--pri);
+        color: var(--prf);
+        border-color: var(--pri);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .in,
+        .shim {
+          animation: none;
+        }
+        .shim {
+          color: var(--mfg);
+          background: none;
+        }
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="t">
+        <div class="eyebrow" id="eye"></div>
+        <h1 id="title"></h1>
+      </div>
+      <button class="ghost" id="lang"></button
+      ><button class="ghost" id="setBtn"></button
+      ><button class="ghost" id="clr"></button>
+    </header>
+    <div id="roster"></div>
+    <div class="bar" id="bar">
+      <span class="grow" id="fInfo"></span
+      ><button class="ghost" id="bFolder" type="button"></button
+      ><button class="ghost" id="bZip" type="button"></button>
+    </div>
+    <div id="log" role="log"></div>
+    <form id="f">
+      <textarea id="t" rows="2"></textarea>
+      <div class="row0">
+        <button type="button" id="tg" aria-pressed="true">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"
+            /></svg
+          ><span id="tgl"></span
+          ><svg class="ck" viewBox="0 0 24 24">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        </button>
+        <button id="send" type="submit">
+          <span class="sd"
+            ><svg viewBox="0 0 24 24">
+              <path d="m5 12 7-7 7 7M12 19V5" /></svg></span
+          ><span class="st"
+            ><svg viewBox="0 0 24 24">
+              <rect x="5" y="5" width="14" height="14" rx="2" /></svg
+          ></span>
+        </button>
+      </div>
+    </form>
+
+    <dialog id="dlg">
+      <h3 id="dTitle" style="margin: 0"></h3>
+      <label id="lKey"></label>
+      <input
+        id="key"
+        type="password"
+        autocomplete="off"
+        placeholder="sk-or-..."
+      />
+      <label id="lBase"></label>
+      <input id="base" placeholder="https://openrouter.ai/api/v1" />
+      <label id="lModels"></label>
+      <div id="models"></div>
+      <p class="hint" id="dHint"></p>
+      <div
+        style="
+          display: flex;
+          gap: 8px;
+          justify-content: flex-end;
+          margin-top: 14px;
+        "
+      >
+        <button class="btn" id="reset" type="button"></button>
+        <button class="btn p" id="save" type="button"></button>
+      </div>
+    </dialog>
+
+    <script>
+      const AGENTS = [
+        {
+          id: "claude",
+          color: "#d97757",
+          al: ["claude", "کلاد", "کلود"],
+          model: "meta-llama/llama-3.3-70b-instruct:free",
+        },
+        {
+          id: "gpt",
+          color: "#10a37f",
+          al: ["gpt", "chatgpt", "جیپیتی", "چت_جی_پی_تی"],
+          model: "openai/gpt-oss-20b:free",
+        },
+        {
+          id: "deepseek",
+          color: "#4d6bfe",
+          al: ["deepseek", "دیپسیک", "دیپ_سیک"],
+          model: "deepseek/deepseek-chat-v3-0324:free",
+        },
+        {
+          id: "gemini",
+          color: "#8e5cf6",
+          al: ["gemini", "جمینای"],
+          model: "google/gemma-3-27b-it:free",
+        },
+        {
+          id: "grok",
+          color: "#e0457b",
+          al: ["grok", "گراک"],
+          model: "mistralai/mistral-small-3.2-24b-instruct:free",
+        },
+      ];
+      const T = {
+        fa: {
+          eye: "یک تیم کوچک، چند ذهن",
+          title: "اتاق شرکت هوش مصنوعی",
+          settings: "تنظیمات",
+          clear: "پاک کردن",
+          ph: "پیام بنویس… مثلاً @claude یک اپ ساده طراحی کن",
+          welcome:
+            "همه پیام‌ها را می‌بینند، اما فقط کسی که منشن شود جواب می‌دهد.",
+          nokey: "اول کلید OpenRouter را در تنظیمات وارد کن.",
+          dTitle: "تنظیمات",
+          lKey: "کلید API (فقط در همین مرورگر می‌ماند)",
+          lModels: "مدل هر عضو (شناسه مدل در OpenRouter)",
+          save: "ذخیره",
+          reset: "بازنشانی مدل‌ها",
+          think: "فکر کردن",
+          thinking: "در حال فکر کردن…",
+          thought: "{n} ثانیه فکر کرد",
+          s1: "خواندن گفتگو ({n} پیام)",
+          s2: "پرسیدن از {m}",
+          s3: "{n} فایل ذخیره شد",
+          stopped: "متوقف شد",
+          hint: "مدل‌های رایگان OpenRouter با «:free» تمام می‌شوند و گاهی تغییر می‌کنند. اگر خطای 404 یا 429 دیدی، شناسه مدل را از openrouter.ai/models عوض کن.",
+          err: "خطا",
+          lBase: "آدرس API (سازگار با OpenAI)",
+          files: "فایل‌ها",
+          zip: "دانلود ZIP",
+          folder: "انتخاب پوشه",
+          folderOn: "پوشه فعال:",
+          noFiles: "هنوز فایلی ساخته نشده",
+        },
+        en: {
+          eye: "A small team, several minds",
+          title: "AI Company Room",
+          settings: "Settings",
+          clear: "Clear",
+          ph: "Type a message… e.g. @claude design a simple app",
+          welcome:
+            "Everyone sees every message, but only the mentioned agent replies.",
+          nokey: "Enter your OpenRouter key in Settings first.",
+          dTitle: "Settings",
+          lKey: "API key (stays in this browser only)",
+          lModels: "Model per member (OpenRouter model ID)",
+          save: "Save",
+          reset: "Reset models",
+          think: "Think",
+          thinking: "Thinking it through",
+          thought: "Thought for {n}s",
+          s1: "Reading the conversation ({n} messages)",
+          s2: "Asking {m}",
+          s3: "Saved {n} file(s)",
+          stopped: "Stopped",
+          hint: "Free OpenRouter models end in “:free” and change over time. If you get a 404 or 429, pick a new model ID from openrouter.ai/models.",
+          err: "Error",
+          lBase: "API base URL (OpenAI-compatible)",
+          files: "Files",
+          zip: "Download ZIP",
+          folder: "Choose folder",
+          folderOn: "Folder:",
+          noFiles: "No files yet",
+        },
+      };
+      const $ = (s) => document.querySelector(s);
+      const store = {
+        get(k, d) {
+          try {
+            const v = localStorage.getItem(k);
+            return v == null ? d : v;
+          } catch (e) {
+            return d;
+          }
+        },
+        set(k, v) {
+          try {
+            localStorage.setItem(k, v);
+          } catch (e) {}
+        },
+      };
+      let lang = store.get("lang", "fa"),
+        history = [],
+        busy = false,
+        ctrl = null,
+        stopped = false,
+        tick = 0;
+      let models = JSON.parse(store.get("models", "{}"));
+      let think = store.get("think", "1") === "1";
+      const modelOf = (a) => models[a.id] || a.model;
+      const tr = (k, v = {}) =>
+        T[lang][k].replace(/\{(\w+)\}/g, (_, x) => v[x]);
+      const I = {
+        spark:
+          '<svg viewBox="0 0 24 24"><path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>',
+        chev: '<svg class="chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>',
+        check: '<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',
+      };
+
+      function applyLang() {
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
+        $("#lang").textContent = lang === "fa" ? "EN" : "فا";
+        $("#eye").innerHTML = I.spark + tr("eye");
+        $("#title").textContent = tr("title");
+        $("#setBtn").textContent = tr("settings");
+        $("#clr").textContent = tr("clear");
+        $("#t").placeholder = tr("ph");
+        $("#t").setAttribute("aria-label", tr("ph"));
+        $("#tgl").textContent = tr("think");
+        $("#lBase").textContent = tr("lBase");
+        $("#bZip").textContent = tr("zip");
+        $("#bFolder").textContent = tr("folder");
+        updateBar();
+        $("#dTitle").textContent = tr("dTitle");
+        $("#lKey").textContent = tr("lKey");
+        $("#lModels").textContent = tr("lModels");
+        $("#save").textContent = tr("save");
+        $("#reset").textContent = tr("reset");
+        $("#dHint").textContent = tr("hint");
+        $("#send").setAttribute("aria-label", busy ? "Stop" : "Send");
+        renderLog();
+      }
+      function renderRoster() {
+        $("#roster").innerHTML = "";
+        AGENTS.forEach((a) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "chip";
+          b.innerHTML = `<span class="dot" style="background:${a.color}"></span>@${a.id}`;
+          b.onclick = () => {
+            const t = $("#t");
+            t.value +=
+              (t.value && !t.value.endsWith(" ") ? " " : "") + "@" + a.id + " ";
+            t.focus();
+            grow();
+          };
+          $("#roster").appendChild(b);
+        });
+      }
+      function renderLog() {
+        const log = $("#log");
+        log.innerHTML = "";
+        const w = document.createElement("div");
+        w.className = "msg sys";
+        w.textContent = tr("welcome");
+        log.appendChild(w);
+        history.forEach((m) => log.appendChild(bubble(m)));
+        log.scrollTop = log.scrollHeight;
+      }
+      function bubble(m) {
+        const d = document.createElement("div");
+        d.className =
+          "msg" + (m.role === "user" ? " me" : "") + (m.err ? " err" : "");
+        if (!m.seen) {
+          m.seen = true;
+          d.classList.add("in");
+        }
+        if (m.role === "user") {
+          d.textContent = m.text;
+          return d;
+        }
+        const a = AGENTS.find((x) => x.id === m.agent);
+        const w = document.createElement("div");
+        w.className = "who";
+        w.style.color = a.color;
+        w.innerHTML = `<span class="dot" style="background:${a.color}"></span>@${a.id}`;
+        d.appendChild(w);
+        if (m.wait) {
+          if (think) {
+            const p = document.createElement("div");
+            p.className = "think live";
+            p.innerHTML = `${I.spark}<span class="shim">${tr("thinking")}</span><span class="tm">${Math.round((Date.now() - m.t0) / 1000)}s</span>`;
+            p.querySelector(".tm").dataset.t0 = m.t0;
+            d.appendChild(p);
+          } else {
+            const s = document.createElement("div");
+            s.className = "body";
+            s.style.color = "var(--mfg)";
+            s.textContent = "…";
+            d.appendChild(s);
+          }
+          return d;
+        }
+        if (think && m.steps) {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "think" + (m.open ? " open" : "");
+          b.setAttribute("aria-expanded", !!m.open);
+          b.innerHTML = `${I.spark}<span>${tr("thought", { n: m.secs })}</span>${I.chev}`;
+          b.onclick = () => {
+            m.open = !m.open;
+            const y = $("#log").scrollTop;
+            renderLog();
+            $("#log").scrollTop = y;
+          };
+          d.appendChild(b);
+          if (m.open) {
+            const o = document.createElement("ol");
+            o.className = "steps";
+            o.innerHTML = m.steps
+              .map((s) => `<li>${I.check}${s}</li>`)
+              .join("");
+            d.appendChild(o);
+          }
+        }
+        const s = document.createElement("div");
+        s.className = "body";
+        s.textContent = m.text;
+        d.appendChild(s);
+        return d;
+      }
+      function mentions(text, exclude) {
+        const found = [];
+        for (const m of text.matchAll(/@([\p{L}\p{N}_]+)/gu)) {
+          const n = m[1].toLowerCase();
+          const a = AGENTS.find((x) => x.al.includes(n));
+          if (a && a.id !== exclude && !found.includes(a.id)) found.push(a.id);
+        }
+        return found;
+      }
+      function buildMessages(a) {
+        const roster = AGENTS.map((x) => "@" + x.id).join(", ");
+        const sys = `You are @${a.id}, a member of a small AI company chat room with a human founder and these colleagues: ${roster}. You see the whole conversation, but you only speak when someone @mentions you. Reply in the language the founder is writing in. Be concise and practical. If you need a colleague to do something, mention them with @name at the end of your reply; otherwise do not mention anyone. When you create code or project files, put each file in its own fenced code block whose first line is a comment with the path, like \`// file: src/app.js\`, \`# file: main.py\` or \`<!-- file: index.html -->\`. Always write the complete file content, never partial snippets.`;
+        const out = [{ role: "system", content: sys }];
+        history
+          .filter((m) => !m.wait && !m.err)
+          .forEach((m) => {
+            const role = m.agent === a.id ? "assistant" : "user";
+            const content =
+              m.role === "user"
+                ? m.text
+                : m.agent === a.id
+                  ? m.text
+                  : `[@${m.agent}]: ${m.text}`;
+            const last = out[out.length - 1];
+            if (last.role === role && role !== "system")
+              last.content += "\n\n" + content;
+            else out.push({ role, content });
+          });
+        return out;
+      }
+      async function ask(a) {
+        const key = store.get("key", "");
+        const base = (
+          store.get("base", "") || "https://openrouter.ai/api/v1"
+        ).replace(/\/+$/, "");
+        const r = await fetch(base + "/chat/completions", {
+          method: "POST",
+          signal: ctrl.signal,
+          headers: Object.assign(
+            { "Content-Type": "application/json" },
+            key ? { Authorization: "Bearer " + key } : {},
+            base.includes("openrouter.ai")
+              ? { "X-Title": "AI Company Room" }
+              : {},
+          ),
+          body: JSON.stringify({
+            model: modelOf(a),
+            messages: buildMessages(a),
+          }),
+        });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok)
+          throw new Error((j.error && j.error.message) || "HTTP " + r.status);
+        const c =
+          j.choices &&
+          j.choices[0] &&
+          j.choices[0].message &&
+          j.choices[0].message.content;
+        if (!c) throw new Error("Empty response");
+        return c.trim();
+      }
+      function setBusy(v) {
+        busy = v;
+        $("#send").classList.toggle("busy", v);
+        $("#send").setAttribute("aria-label", v ? "Stop" : "Send");
+        clearInterval(tick);
+        if (v)
+          tick = setInterval(
+            () =>
+              document
+                .querySelectorAll(".tm")
+                .forEach(
+                  (e) =>
+                    (e.textContent =
+                      Math.round((Date.now() - e.dataset.t0) / 1000) + "s"),
+                ),
+            1000,
+          );
+      }
+      async function run(queue) {
+        let steps = 0;
+        ctrl = new AbortController();
+        stopped = false;
+        while (queue.length && steps < 6 && !stopped) {
+          const a = AGENTS.find((x) => x.id === queue.shift());
+          steps++;
+          const t0 = Date.now(),
+            ph = { role: "assistant", agent: a.id, wait: true, t0, seen: true };
+          const nMsgs = history.length;
+          history.push(ph);
+          renderLog();
+          try {
+            const text = await ask(a);
+            const before = files.size;
+            await extractFiles(text);
+            const st = [tr("s1", { n: nMsgs }), tr("s2", { m: modelOf(a) })];
+            if (files.size > before || /file:/i.test(text))
+              st.push(
+                tr("s3", {
+                  n: [...text.matchAll(/file:\s*[^\s>*]+/gi)].length,
+                }),
+              );
+            history.splice(history.indexOf(ph), 1, {
+              role: "assistant",
+              agent: a.id,
+              text,
+              steps: st,
+              secs: Math.round((Date.now() - t0) / 1000),
+            });
+            mentions(text, a.id).forEach((id) => {
+              if (!queue.includes(id)) queue.push(id);
+            });
+          } catch (e) {
+            if (e.name === "AbortError") history.splice(history.indexOf(ph), 1);
+            else
+              history.splice(history.indexOf(ph), 1, {
+                role: "assistant",
+                agent: a.id,
+                text: tr("err") + ": " + e.message,
+                err: true,
+              });
+          }
+          renderLog();
+        }
+      }
+      /* ---------- files: extract, zip, folder ---------- */
+      const files = new Map();
+      let dir = null;
+      function updateBar() {
+        const n = files.size;
+        $("#fInfo").textContent =
+          (n
+            ? tr("files") + ": " + [...files.keys()].join(", ")
+            : tr("noFiles")) +
+          (dir ? "  |  " + tr("folderOn") + " " + dir.name : "");
+        $("#bZip").disabled = !n;
+        $("#bFolder").style.display = window.showDirectoryPicker ? "" : "none";
+      }
+      const cleanPath = (p) =>
+        p
+          .replace(/\\/g, "/")
+          .split("/")
+          .filter((x) => x && x !== "." && x !== "..")
+          .join("/");
+      async function extractFiles(text) {
+        for (const m of text.matchAll(/```[^\n]*\n([\s\S]*?)```/g)) {
+          const lines = m[1].split("\n");
+          const h = lines[0].match(/file:\s*([^\s>*]+)/i);
+          if (!h) continue;
+          const path = cleanPath(h[1]);
+          if (!path) continue;
+          files.set(path, lines.slice(1).join("\n"));
+          if (dir)
+            try {
+              await writeToDir(path, files.get(path));
+            } catch (e) {}
+        }
+        updateBar();
+      }
+      async function writeToDir(path, content) {
+        const parts = path.split("/");
+        let d = dir;
+        for (const x of parts.slice(0, -1))
+          d = await d.getDirectoryHandle(x, { create: true });
+        const fh = await d.getFileHandle(parts[parts.length - 1], {
+          create: true,
+        });
+        const w = await fh.createWritable();
+        await w.write(content);
+        await w.close();
+      }
+      const CRC = (() => {
+        const t = [];
+        for (let n = 0; n < 256; n++) {
+          let c = n;
+          for (let k = 0; k < 8; k++)
+            c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+          t[n] = c >>> 0;
+        }
+        return t;
+      })();
+      const crc32 = (b) => {
+        let c = 0xffffffff;
+        for (const x of b) c = CRC[(c ^ x) & 255] ^ (c >>> 8);
+        return (c ^ 0xffffffff) >>> 0;
+      };
+      function makeZip(map) {
+        const enc = new TextEncoder(),
+          parts = [],
+          central = [];
+        let off = 0;
+        for (const [name, txt] of map) {
+          const nb = enc.encode(name),
+            db = enc.encode(txt),
+            crc = crc32(db);
+          const lh = new DataView(new ArrayBuffer(30));
+          lh.setUint32(0, 0x04034b50, true);
+          lh.setUint16(4, 20, true);
+          lh.setUint16(6, 0x0800, true);
+          lh.setUint32(14, crc, true);
+          lh.setUint32(18, db.length, true);
+          lh.setUint32(22, db.length, true);
+          lh.setUint16(26, nb.length, true);
+          parts.push(lh.buffer, nb, db);
+          const ch = new DataView(new ArrayBuffer(46));
+          ch.setUint32(0, 0x02014b50, true);
+          ch.setUint16(4, 20, true);
+          ch.setUint16(6, 20, true);
+          ch.setUint16(8, 0x0800, true);
+          ch.setUint32(16, crc, true);
+          ch.setUint32(20, db.length, true);
+          ch.setUint32(24, db.length, true);
+          ch.setUint16(28, nb.length, true);
+          ch.setUint32(42, off, true);
+          central.push(ch.buffer, nb);
+          off += 30 + nb.length + db.length;
+        }
+        const csize = central.reduce((a, b) => a + b.byteLength, 0);
+        const end = new DataView(new ArrayBuffer(22));
+        end.setUint32(0, 0x06054b50, true);
+        end.setUint16(8, map.size, true);
+        end.setUint16(10, map.size, true);
+        end.setUint32(12, csize, true);
+        end.setUint32(16, off, true);
+        return new Blob([...parts, ...central, end.buffer], {
+          type: "application/zip",
+        });
+      }
+      $("#bZip").onclick = () => {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(makeZip(files));
+        a.download = "project.zip";
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      };
+      $("#bFolder").onclick = async () => {
+        try {
+          dir = await window.showDirectoryPicker({ mode: "readwrite" });
+          for (const [p, c] of files) await writeToDir(p, c);
+          updateBar();
+        } catch (e) {}
+      };
+      /* ---------- composer ---------- */
+      const ta = $("#t");
+      function grow() {
+        ta.style.height = "auto";
+        ta.style.height = Math.max(56, Math.min(ta.scrollHeight, 120)) + "px";
+      }
+      ta.addEventListener("input", grow);
+      $("#tg").onclick = () => {
+        think = !think;
+        store.set("think", think ? "1" : "0");
+        $("#tg").setAttribute("aria-pressed", think);
+        renderLog();
+      };
+      $("#send").addEventListener("click", (e) => {
+        if (busy) {
+          e.preventDefault();
+          stopped = true;
+          ctrl && ctrl.abort();
+        }
+      });
+      $("#f").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const v = ta.value.trim();
+        if (!v || busy) return;
+        if (!store.get("key", "") && !store.get("base", "")) {
+          history.push({
+            role: "assistant",
+            agent: "claude",
+            text: tr("nokey"),
+            err: true,
+          });
+          renderLog();
+          $("#dlg").showModal();
+          return;
+        }
+        ta.value = "";
+        grow();
+        history.push({ role: "user", text: v });
+        renderLog();
+        const q = mentions(v);
+        setBusy(true);
+        await run(q);
+        setBusy(false);
+        ta.focus();
+      });
+      ta.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+          e.preventDefault();
+          $("#f").requestSubmit();
+        }
+      });
+      $("#lang").onclick = () => {
+        lang = lang === "fa" ? "en" : "fa";
+        store.set("lang", lang);
+        applyLang();
+      };
+      $("#clr").onclick = () => {
+        history = [];
+        files.clear();
+        updateBar();
+        renderLog();
+      };
+      $("#setBtn").onclick = () => {
+        $("#key").value = store.get("key", "");
+        $("#base").value = store.get("base", "");
+        $("#models").innerHTML = "";
+        AGENTS.forEach((a) => {
+          const r = document.createElement("div");
+          r.className = "row";
+          r.innerHTML = `<span style="color:${a.color};font-weight:700">@${a.id}</span><input data-id="${a.id}" value="${modelOf(a)}">`;
+          $("#models").appendChild(r);
+        });
+        $("#dlg").showModal();
+      };
+      $("#save").onclick = () => {
+        store.set("key", $("#key").value.trim());
+        store.set("base", $("#base").value.trim());
+        document.querySelectorAll("#models input").forEach((i) => {
+          models[i.dataset.id] = i.value.trim();
+        });
+        store.set("models", JSON.stringify(models));
+        $("#dlg").close();
+      };
+      $("#reset").onclick = () => {
+        models = {};
+        store.set("models", "{}");
+        $("#setBtn").click();
+      };
+      $("#tg").setAttribute("aria-pressed", think);
+      renderRoster();
+      applyLang();
+    </script>
+  </body>
+</html>
